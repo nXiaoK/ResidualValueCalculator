@@ -3,11 +3,8 @@ import React from 'react';
 const ResultDisplay = ({ remainingValue, remainingValueCNY, currency, calculationSteps , priceDifference}) => {
     const handleCopyToClipboard = () => {
         const markdownContent = `
-### 计算结果
-
-**剩余价值：** ${remainingValue} ${currency} ${currency !== 'CNY' ? `(≈ ${remainingValueCNY} CNY)` : ''}
-
-### 计算步骤
+# 计算结果
+**剩余价值：** ${remainingValue} ${currency} ${currency !== 'CNY' ? `(≈ ${remainingValueCNY} CNY)` : ''} \`${priceDifference > 0 ? `溢价：${priceDifference} CNY` : priceDifference < 0 ? `折价：${Math.abs(priceDifference)} CNY` : '交易价格与剩余价值相等'}\`
 \`\`\`
 ${calculationSteps
     .split('\n')
