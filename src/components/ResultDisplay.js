@@ -1,25 +1,39 @@
 import React from 'react';
-
-const ResultDisplay = ({ remainingValue, remainingValueCNY, currency, calculationSteps , priceDifference}) => {
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    try {
+        document.execCommand('copy');
+        alert('复制成功（旧式）');
+    } catch (err) {
+        alert('复制失败');
+    }
+    document.body.removeChild(textArea);
+}
+const ResultDisplay = ({ remainingValue, remainingValueCNY, currency, calculationSteps, priceDifference }) => {
     const handleCopyToClipboard = () => {
         const markdownContent = `
 # 计算结果
 **剩余价值：** ${remainingValue} ${currency} ${currency !== 'CNY' ? `(≈ ${remainingValueCNY} CNY)` : ''} \`${priceDifference > 0 ? `溢价：${priceDifference} CNY` : priceDifference < 0 ? `折价：${Math.abs(priceDifference)} CNY` : '交易价格与剩余价值相等'}\`
 \`\`\`
 ${calculationSteps
-    .split('\n')
-    .map(line => line.trim())
-    .join('\n')}
+                .split('\n')
+                .map(line => line.trim())
+                .join('\n')}
 \`\`\`
         `;
-        navigator.clipboard.writeText(markdownContent)
-            .then(() => {
-                alert('计算结果已复制到剪贴板！');
-            })
-            .catch((err) => {
-                alert('复制失败，请重试！');
-                console.error(err);
-            });
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            // 现代浏览器支持
+            navigator.clipboard.writeText(markdownContent)
+                .then(() => alert('复制成功'))
+                .catch(err => console.error(err));
+        } else {
+            // 回退到旧式方案
+            fallbackCopyToClipboard(markdownContent);
+        }
     };
 
     return (
@@ -40,8 +54,8 @@ ${calculationSteps
                 {priceDifference > 0
                     ? `溢价：${priceDifference} CNY`
                     : priceDifference < 0
-                    ? `折价：${Math.abs(priceDifference)} CNY`
-                    : '交易价格与剩余价值相等'}
+                        ? `折价：${Math.abs(priceDifference)} CNY`
+                        : '交易价格与剩余价值相等'}
             </p>
             <div className="calculation-steps">
                 <h3>计算步骤</h3>

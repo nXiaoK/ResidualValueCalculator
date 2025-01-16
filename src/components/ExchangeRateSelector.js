@@ -9,7 +9,7 @@ const ExchangeRateSelector = ({ currency, setCurrency, setExchangeRate, setExcha
     useEffect(() => {
         const fetchExchangeRates = async () => {
             try {
-                const response = await fetch('https://v6.exchangerate-api.com/v6/请填写自己申请的token值/CNY'); // 替换为你的汇率 API
+                const response = await fetch('https://v6.exchangerate-api.com/v6/填写你的Token/latest/CNY'); // 替换为你的汇率 API
                 const data = await response.json();
 
                 // 缓存数据到 localStorage，添加时间戳
